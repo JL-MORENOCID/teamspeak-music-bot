@@ -1,0 +1,33 @@
+{
+  "name": "teamspeak-music-bot",
+  "version": "1.0.0",
+  "description": "TeamSpeak 3 Music bot",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --experimental-modules --es-module-specifier-resolution=node ./src/App.js 3000",
+    "run": "nodemon --experimental-modules --es-module-specifier-resolution=node ./src/App.js 3000",
+    "build": "npm build build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JL-MORENOCID/teamspeak-music-bot.git"
+  },
+  "keywords": [
+    "ts3",
+    "music",
+    "bot"
+  ],
+  "author": "JL-MORENOCID",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JL-MORENOCID/teamspeak-music-bot/issues"
+  },
+  "homepage": "https://github.com/JL-MORENOCID/teamspeak-music-bot#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.6",
+    "ts3-nodejs-library": "^3.4.0"
+  }
+}
