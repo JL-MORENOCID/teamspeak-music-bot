@@ -1,5 +1,6 @@
 # Secrets settings
 src/services/settings.js
+src/certs
 
 # Logs
 logs
