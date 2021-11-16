@@ -2,11 +2,18 @@ import getData from "./services/getData"
 import { readFileSync } from "fs"
 import { createServer } from "https"
 import { Server } from "socket.io"
-import { SERVER_QUERY_USER, SERVER_QUERY_PASS } from "./services/settings"
+import { sendChannelMessage, moveChannelTo, setClientNickname } from "./services/clientHandler"
+import { MUSIC_CHANNEL_NAME, MUSIC_BOT_NICKNAME } from "./services/settings"
 
 // Make a call
+/*
 getData({command: "channellist"}, {"-topic": '', "-info": ''})
   .then(val => console.log(val))
+*/
+
+setClientNickname(MUSIC_BOT_NICKNAME)
+moveChannelTo(MUSIC_CHANNEL_NAME)
+sendChannelMessage("patata")
 
 // HTTPS Server
 const httpServer = createServer({
