@@ -1,13 +1,41 @@
-import getData from "./services/getData"
+import runCommand from "./services/runCommand"
 import { readFileSync } from "fs"
 import { createServer } from "https"
 import { Server } from "socket.io"
-import { sendChannelMessage, moveChannelTo, setClientNickname } from "./services/clientHandler"
-import { MUSIC_CHANNEL_NAME, MUSIC_BOT_NICKNAME } from "./services/settings"
+import { sendChannelMessage, moveChannelTo, setClientNickname, currentChannelId } from "./services/clientHandler"
+import { MUSIC_CHANNEL_NAME, MUSIC_BOT_NICKNAME, SERVER_QUERY_USER, SERVER_QUERY_PASS } from "./services/settings"
+
+// ------------
+
+import { TeamSpeak, QueryProtocol } from "ts3-nodejs-library"
+//import with javascript
+//const { TeamSpeak } = require("ts3-nodejs-library")
+
+//create a new connection
+TeamSpeak.connect({
+  host: "blueclouds.es",
+  protocol: QueryProtocol.RAW, //optional
+  queryport: 10081, //optional
+  serverport: 9987,
+  username: SERVER_QUERY_USER,
+  password: SERVER_QUERY_PASS,
+  nickname: "NodeJS Query Framework"
+}).then(async teamspeak => {
+  const clients = await teamspeak.clientList({ clientType: 0 })
+  clients.forEach(client => {
+    console.log("Sending 'Hello!' Message to", client.nickname)
+    client.message("Hello!")
+  })
+}).catch(e => {
+  console.log("Catched an error!")
+  console.error(e)
+})
+
+// ------------
 
 // Make a call
 /*
-getData({command: "channellist"}, {"-topic": '', "-info": ''})
+runCommand({command: "channellist"}, {"-topic": '', "-info": ''})
   .then(val => console.log(val))
 */
 

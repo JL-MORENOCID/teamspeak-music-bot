@@ -1,7 +1,7 @@
 import fetch from "node-fetch"
 import { API_URL, API_KEY } from './settings'
 
-export default async function getData ({
+export default async function runCommand ({
   command
 } = {}, ...args) {
 
@@ -38,7 +38,5 @@ export default async function getData ({
         'Accept': 'application/json'}
     }
   )
-  const data = await response.json()
-
-  return data
+  return await response.json()
 }

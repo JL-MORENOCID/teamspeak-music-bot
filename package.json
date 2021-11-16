@@ -29,6 +29,7 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.6",
     "socket.io": "^4.3.2",
-    "socket.io-client": "^4.3.2"
+    "socket.io-client": "^4.3.2",
+    "ts3-nodejs-library": "^3.4.0"
   }
 }

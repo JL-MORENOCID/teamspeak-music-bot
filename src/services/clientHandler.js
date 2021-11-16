@@ -1,73 +1,68 @@
-import getData from "./getData"
+import runCommand from "./runCommand"
 
 /**
- * Sends channel message by client
- * @param {*} client 
- * @param {*} message 
+ * Sends channel message by client.
+ * @param {String} message 
  */
 export function sendChannelMessage(message) {
-  getData({command: 'sendtextmessage'}, {
+  runCommand({command: 'sendtextmessage'}, {
     targetmode: 2, // Target level 2 = CHANNEL
     target: 0, // current serveradmin channel
     msg: message
   })
-  .then((val) => {return val})
   .catch(console.error)
 }
 
 
 /**
- * Moves client to specific channel_id
- * @param {Number} channel_id 
+ * Moves client to specific channel_name
+ * @param {String} channel_id 
  */
  export async function moveChannelTo(channel_name) {
-  
-  const channel_id = getChannelId(channel_name)
-
-  //console.log(channel_id)
-
-  /*
-  const botname = "serverAdmin"
-  const clientList = getData({command: 'clientlist'}).then((val) => {return val})
-  const channelList = getData({command: 'channellist'})
-  //const clientList = await client.send("clientlist");
-  //const channelList = await client.send('channellist');
-
-  let serverAdmin = (clientList.response || []).find((obj) => {
-      return obj.client_type === 1 && obj.client_nickname.match(
-          new RegExp(`^${escapeRegExp(botname)}`, 'i'));
-  });
-
-  if (serverAdmin) {
-      if (serverAdmin.cid !== channel_id) { //if serverAdmin is not already in target channel
-          getData({command: 'clientmove'}, {clid: serverAdmin.clid, cid: channel_id});
-          let channel_name = channelList.response.find((obj) => obj.cid === channel_id).channel_name;
-          console.log(`${botname} moved to: ${channel_name}, cid: ${channel_id}`);
-      }
-  } else
-      console.error('Music bot or serverAdmin has not been found');
-  */
+  const channel_id = await getChannelId(channel_name)
+  const client_id = await currentClientId()
+  await runCommand({command: 'clientmove'}, {cid: channel_id, clid: client_id})
+  .catch(console.error)
 }
 
 /**
  * Returns channel id
  * @param {String} channel_name 
  */
-export function getChannelId(channel_name) {
-  getData({command: 'channelfind'}, {pattern: channel_name})
-  .then( (val) => {
-    if (typeof val.body[0].cid !== 'undefined') { // Channel not found
-      console.log('Channel name not found, going to "Default Channel".')
+export async function getChannelId(channel_name) {
+  return await runCommand({command: 'channelfind'}, {pattern: channel_name})
+  .then(val => {
+    if (val.status.message !== 'ok') { // Channel not found
+      console.log(`ERROR "${val.status.message}": going to "Default Channel".`)
       return 1
     } else { // Channel found
       return val.body[0].cid
     }
   })
+  .catch(console.error)
 }
 
-// TO DO
-export function currentChannelId() {
-  
+/**
+ * Get current client channel.
+ */
+export async function currentChannelId() {
+  return await runCommand({command: 'whoami'}, {})
+  .then(val => {
+    return val.body[0].client_channel_id
+  })
+  .catch(console.error)
+}
+
+/**
+ * Get current client id.
+ * @returns
+ */
+export async function currentClientId() {
+  return await runCommand({command: 'whoami'}, {})
+  .then(val => {
+    return val.body[0].client_id
+  })
+  .catch(console.error)
 }
 
 /**
@@ -75,5 +70,6 @@ export function currentChannelId() {
  * @param {String} new_nick 
  */
 export function setClientNickname(new_nick) {
-  getData({command: 'clientupdate'}, {client_nickname: new_nick})
+  runCommand({command: 'clientupdate'}, {client_nickname: new_nick})
+  .catch(console.error)
 }
