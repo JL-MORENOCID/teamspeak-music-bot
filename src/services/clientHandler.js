@@ -10,7 +10,7 @@ export function sendChannelMessage(message) {
     target: 0, // current serveradmin channel
     msg: message
   })
-  .catch(console.error)
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
 }
 
 
@@ -22,7 +22,7 @@ export function sendChannelMessage(message) {
   const channel_id = await getChannelId(channel_name)
   const client_id = await currentClientId()
   await runCommand({command: 'clientmove'}, {cid: channel_id, clid: client_id})
-  .catch(console.error)
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
 }
 
 /**
@@ -39,7 +39,7 @@ export async function getChannelId(channel_name) {
       return val.body[0].cid
     }
   })
-  .catch(console.error)
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
 }
 
 /**
@@ -50,7 +50,7 @@ export async function currentChannelId() {
   .then(val => {
     return val.body[0].client_channel_id
   })
-  .catch(console.error)
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
 }
 
 /**
@@ -62,7 +62,7 @@ export async function currentClientId() {
   .then(val => {
     return val.body[0].client_id
   })
-  .catch(console.error)
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
 }
 
 /**
@@ -71,5 +71,5 @@ export async function currentClientId() {
  */
 export function setClientNickname(new_nick) {
   runCommand({command: 'clientupdate'}, {client_nickname: new_nick})
-  .catch(console.error)
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
 }

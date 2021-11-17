@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-modules --es-module-specifier-resolution=node ./src/App.js 3000",
+    "bot": "node --experimental-modules --es-module-specifier-resolution=node ./src/client_minimal.js 3000",
     "client": "node --experimental-modules --es-module-specifier-resolution=node ./src/Client.js",
     "build": "npm build build"
   },
@@ -29,7 +30,6 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.6",
     "socket.io": "^4.3.2",
-    "socket.io-client": "^4.3.2",
-    "ts3-nodejs-library": "^3.4.0"
+    "socket.io-client": "^4.3.2"
   }
 }

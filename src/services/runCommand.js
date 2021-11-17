@@ -38,5 +38,7 @@ export default async function runCommand ({
         'Accept': 'application/json'}
     }
   )
+  .catch(err => console.log(`ERROR: runCommand | ${err}`))
+
   return await response.json()
 }
