@@ -1,4 +1,5 @@
 import fetch from "node-fetch"
+import { stringify } from "querystring"
 import { API_URL, API_KEY } from './settings'
 
 export default async function runCommand ({
@@ -6,6 +7,7 @@ export default async function runCommand ({
 } = {}, ...args) {
 
   // Transform args data to 'GET'
+  /*
   const opts = () => {
     let resolve = ""
     for (let i=0; Object.keys(args[0]).length > i; i++) {
@@ -20,6 +22,11 @@ export default async function runCommand ({
       }
     }
     return resolve
+  }
+  */
+
+  const opts = () => {
+    return (args.length > 0) ? stringify(args[0]) : ""
   }
 
   // DEBUG: REMOVE THIS

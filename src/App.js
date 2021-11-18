@@ -2,7 +2,7 @@ import runCommand from "./services/runCommand"
 import { readFileSync } from "fs"
 import { createServer } from "https"
 import { Server } from "socket.io"
-import { sendChannelMessage, moveChannelTo, setClientNickname } from "./services/clientHandler"
+import { sendChannelMessage, moveChannelToName, setClientNickname, replyClientOnCurrentChannel} from "./services/clientHandler"
 import { MUSIC_CHANNEL_NAME, MUSIC_BOT_NICKNAME, SERVER_QUERY_USER, SERVER_QUERY_PASS } from "./services/settings"
 import { init } from './services/init'
 
@@ -13,6 +13,8 @@ runCommand({command: "channellist"}, {"-topic": '', "-info": ''})
 */
 
 init()
+
+//replyClientOnCurrentChannel(103, "eh")
 
 //sendChannelMessage("patata")
 //moveChannelTo(MUSIC_CHANNEL_NAME)
@@ -32,6 +34,11 @@ io.on("connection", (socket) => {
 })
 httpServer.listen(3000)
 */
+
+// Keeping connection alive every 4 min
+setInterval(() => {
+  runCommand({command: "version"}, {})
+}, 240000)
 
 /*
 listen(3000,() => {

@@ -1,5 +1,28 @@
 import runCommand from "./runCommand"
 
+export async function handleChannelCommand(message) {
+  let { msg, client } = message
+  msg = msg.toString().trim()
+  console.log(`Message received from ${invokername}[${invokerid}]: ${msg}`)
+
+  if (!msg.startsWith('!')) // Not a command
+    return
+
+  let [cmd, ...args] = msg.substring(1).split(' ')
+  switch (cmd.toLowerCase()) {
+    default: // Unknown
+      sendChannelMessage(client, 'Unknown command: ' + msg)
+      break
+    case 'git': // Git commands
+      if (args.length < 1) {
+        sendChannelMessage('ERROR: git | You send the command without any param.')
+        break
+      } else {
+        // manage args command
+      }
+  }
+}
+
 /**
  * Sends channel message by client.
  * @param {String} message 
@@ -16,11 +39,25 @@ export function sendChannelMessage(message) {
 
 /**
  * Moves client to specific channel_name
- * @param {String} channel_id 
+ * @param {String} channel_name 
  */
- export async function moveChannelTo(channel_name) {
+ export async function moveChannelToName(channel_name) {
   const channel_id = await getChannelId(channel_name)
+  await sleep(300)
   const client_id = await currentClientId()
+  await sleep(300)
+  await runCommand({command: 'clientmove'}, {cid: channel_id, clid: client_id})
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
+}
+
+
+/**
+ * Moves client to specific channel_id (cid)
+ * @param {Number} channel_id
+ */
+export async function moveChannelToId(channel_id) {
+  const client_id = await currentClientId()
+  await sleep(300)
   await runCommand({command: 'clientmove'}, {cid: channel_id, clid: client_id})
   .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
 }
@@ -54,6 +91,17 @@ export async function currentChannelId() {
 }
 
 /**
+ * Get client by id.
+ */
+ export async function getClientById(id) {
+  return await runCommand({command: 'clientinfo'}, {clid: id})
+  .then(val => {
+    return val.body[0]
+  })
+  .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
+}
+
+/**
  * Get current client id.
  * @returns
  */
@@ -72,4 +120,24 @@ export async function currentClientId() {
 export function setClientNickname(new_nick) {
   runCommand({command: 'clientupdate'}, {client_nickname: new_nick})
   .catch(err => console.log(`ERROR: ClientHandler | ${err}`))
+}
+
+// ---
+export async function replyClientOnCurrentChannel(clid, text) {
+
+  if (await currentClientId() === clid) return
+  await sleep(300)
+
+  getClientById(clid)
+  .then(async data => {
+    await moveChannelToId(data.cid) // Move bot to sender channel
+    sendChannelMessage(`> ${data.client_nickname}:   ${text.charAt(0).toUpperCase() + text.slice(1)}`)
+  })
+  .catch(console.error)
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
 }
